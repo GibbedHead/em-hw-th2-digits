@@ -17,7 +17,7 @@ public class Counter {
         return count;
     }
 
-    public boolean isMaxReached() {
-        return count >= max;
+    public boolean isLesserThanMax() {
+        return count < max;
     }
 }

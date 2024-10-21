@@ -19,8 +19,12 @@ public class DigitsPrinter extends Thread {
     @Override
     public void run() {
         synchronized (counter) {
-            while (!counter.isMaxReached()) {
-                while (!predicate.test(counter.getCount())) {
+            while (counter.isLesserThanMax()) {
+                if (predicate.test(counter.getCount())) {
+                    System.out.printf("%s:\t%d%n", Thread.currentThread().getName(), counter.getCount());
+                    counter.increment();
+                    counter.notifyAll();
+                } else {
                     try {
                         counter.wait();
                     } catch (InterruptedException e) {
@@ -28,10 +32,6 @@ public class DigitsPrinter extends Thread {
                         return;
                     }
                 }
-
-                System.out.printf("%s: %d%n", Thread.currentThread().getName(), counter.getCount());
-                counter.increment();
-                counter.notifyAll();
             }
         }
     }
